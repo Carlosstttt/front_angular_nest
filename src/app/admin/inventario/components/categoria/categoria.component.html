@@ -3,7 +3,7 @@
 
     <p-button (click)="showDialog()" label="Nueva Categoría" icon="pi pi-plus" class="mb-3"></p-button>
 
-    <p-dialog header="Nueva Categoría" [(visible)]="visible" [modal]="true" [style]="{ width: '25rem' }">
+    <p-dialog header="Categoría" [(visible)]="visible" [modal]="true" [style]="{ width: '25rem' }">
         <div class="flex flex-column gap-2 mb-3">
             <label for="nombre" class="font-semibold">Nombre</label>
             <input pInputText id="nombre" [(ngModel)]="nombre" autocomplete="off" />
@@ -13,7 +13,7 @@
             <input pInputText id="descripcion" [(ngModel)]="descripcion" autocomplete="off" />
         </div>
         <ng-template pTemplate="footer">
-            <p-button label="Cancelar" severity="secondary" (click)="visible = false"></p-button>
+            <p-button label="Cancelar" severity="secondary" (click)="cerrarDialog()"></p-button>
             <p-button label="Guardar" (click)="guardarCategoria()"></p-button>
         </ng-template>
     </p-dialog>
@@ -24,6 +24,7 @@
                 <th>Id</th>
                 <th>Nombre</th>
                 <th>Descripción</th>
+                <th>Acción</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-categoria>
@@ -31,6 +32,12 @@
                 <td>{{ categoria.id }}</td>
                 <td>{{ categoria.nombre }}</td>
                 <td>{{ categoria.descripcion }}</td>
+                <td>
+                    <div class="flex">
+                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editarCategoria(categoria)"></button>
+                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="eliminarCategoria(categoria)"></button>
+                    </div>
+                </td>
             </tr>
         </ng-template>
     </p-table>

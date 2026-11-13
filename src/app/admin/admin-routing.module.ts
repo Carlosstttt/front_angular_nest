@@ -4,6 +4,7 @@ import { PerfilComponent } from './components/perfil/perfil.component';
 import { LayoutComponent } from './layout/layout.component';
 import { CategoriaComponent } from './inventario/components/categoria/categoria.component';
 import { AppLayoutComponent } from './layout/app.layout.component';
+import { ProductoComponent } from './inventario/components/producto/producto.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
       {
         path: "categorias",
         component:CategoriaComponent
+      },
+      {
+        path: "productos",
+        component:ProductoComponent
       }
     ]
   }
