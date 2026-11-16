@@ -8,25 +8,44 @@
                     <span class="text-600 font-medium">Inicia sesión para continuar</span>
                 </div>
 
-                <!-- Conectamos tu FormGroup al contenedor del diseño Sakai -->
-                <form [formGroup]="loginForm">
-                    <label for="email1" class="block text-900 text-xl font-medium mb-2">Correo</label>
-                    <input id="email1" type="email" formControlName="email" placeholder="Correo electrónico" class="w-full md:w-30rem mb-5 p-3 border-1 surface-border border-round">
+                <!-- Alerta visual si el usuario está bloqueado por intentos fallidos -->
+                <div *ngIf="bloqueado" class="p-3 mb-4 border-round bg-red-100 text-red-800 text-center font-medium">
+                    <i class="pi pi-lock mr-2"></i>
+                    Demasiados intentos fallidos. Reintenta en <strong>{{ segundosRestantes }}s</strong>
+                </div>
 
-                    <label for="password1" class="block text-900 font-medium text-xl mb-2">Contraseña</label>
-                    <input id="password1" type="password" formControlName="password" placeholder="Contraseña" class="w-full md:w-30rem mb-5 p-3 border-1 surface-border border-round">
+                <form [formGroup]="loginForm" (ngSubmit)="funIngresar()">
+                    <div class="mb-4">
+                        <label for="identificador1" class="block text-900 text-xl font-medium mb-2">Correo o Cédula</label>
+                        <input id="identificador1" type="text" formControlName="identificador" placeholder="Correo electrónico o número de cédula" class="w-full md:w-30rem p-3 border-1 surface-border border-round">
+                        
+                        <small *ngIf="loginForm.get('identificador')?.touched && loginForm.get('identificador')?.errors" class="block text-red-500 mt-1">
+                            <span *ngIf="loginForm.get('identificador')?.errors?.['required']">Este campo es obligatorio.</span>
+                            <span *ngIf="loginForm.get('identificador')?.errors?.['cedulaInvalida']">{{ loginForm.get('identificador')?.errors?.['cedulaInvalida'] }}</span>
+                            <span *ngIf="loginForm.get('identificador')?.errors?.['emailInvalido']">{{ loginForm.get('identificador')?.errors?.['emailInvalido'] }}</span>
+                        </small>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="password1" class="block text-900 font-medium text-xl mb-2">Contraseña</label>
+                        <input id="password1" type="password" formControlName="password" placeholder="Contraseña" class="w-full md:w-30rem p-3 border-1 surface-border border-round">
+                        
+                        <small *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors" class="block text-red-500 mt-1">
+                            <span *ngIf="loginForm.get('password')?.errors?.['required']">La contraseña es obligatoria.</span>
+                            <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Debe tener al menos 6 caracteres.</span>
+                        </small>
+                    </div>
 
                     <div class="flex align-items-center justify-content-between mb-5 gap-5">
                         <div class="flex align-items-center">
                             <input type="checkbox" id="rememberme1" class="mr-2">
                             <label for="rememberme1">Recordarme</label>
                         </div>
-                        <a class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)">¿Olvidaste tu contraseña?</a>
+                        <a routerLink="/auth/forgot-password" class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)">¿Olvidaste tu contraseña?</a>
                     </div>
 
-                    <!-- Conectamos tu método funIngresar() y la validación !loginForm.valid -->
-                    <button type="button" (click)="funIngresar()" [disabled]="!loginForm.valid" class="w-full p-3 text-xl bg-primary border-none border-round text-white cursor-pointer">
-                        Ingresar
+                    <button type="submit" [disabled]="!loginForm.valid || bloqueado" class="w-full p-3 text-xl bg-primary border-none border-round text-white cursor-pointer">
+                        {{ bloqueado ? 'Bloqueado (' + segundosRestantes + 's)' : 'Ingresar' }}
                     </button>
                 </form>
             </div>

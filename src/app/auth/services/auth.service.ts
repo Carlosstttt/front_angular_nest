@@ -3,22 +3,25 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
+  private baseUrl = environment.urlServidor;
+  private http = inject(HttpClient);
 
-  private baseUrl=environment.urlServidor;
-
-  private http=inject(HttpClient);
-
-  //constructor(private http: HttpClient) { } asi se inyectaba en versiones anteriores de angular, ahora se hace con inject
-
-  constructor(){}
-  loginConNest(credenciales:any){
-    return this.http.post<any>(`${this.baseUrl}/auth/login`, credenciales)
+  loginConNest(credenciales: any) {
+    return this.http.post<any>(`${this.baseUrl}/auth/login`, credenciales);
   }
 
-  registerConNest(datos:any){
-    return this.http.post<any>(`${this.baseUrl}/register`, datos)
+  registerConNest(datos: any) {
+    return this.http.post<any>(`${this.baseUrl}/auth/register`, datos);
+  }
+
+  solicitarCodigoRecuperacion(email: string) {
+    return this.http.post<any>(`${this.baseUrl}/auth/forgot-password`, { email });
+  }
+
+  restablecerPassword(datos: { email: string; codigo: string; nuevaPassword: string }) {
+    return this.http.post<any>(`${this.baseUrl}/auth/reset-password`, datos);
   }
 }
